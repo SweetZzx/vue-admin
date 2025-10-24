@@ -11,11 +11,33 @@ export default defineConfig({
   plugins: [
     vue(),
     UnoCSS(),
+    // 自动导入 API
     AutoImport({
-      //api
+      // 自动导入的库
       imports: ['vue', 'vue-router', 'pinia'],
+
+      // 自动导入的函数
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/ // .vue
+      ],
+
+      // 生成类型声明文件的路径
+      dts: './auto-imports.d.ts',
+
+      // ESLint 支持
+      eslintrc: {
+        enabled: true,
+        filepath: './.eslintrc-auto-import.json',
+        globalsPropValue: true
+      },
+
+      // 解析器
       resolvers: [ElementPlusResolver()],
-      eslintrc: { enabled: false } //给eslint提供配置 只需要一次
+
+      // 自定义导入
+      dirs: ['./src/composables/**', './src/utils/**']
     }),
     Components({
       //组件

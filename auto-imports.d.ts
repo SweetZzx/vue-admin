@@ -22,6 +22,7 @@ declare global {
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
+  const isExternal: typeof import('./src/utils/validate').isExternal
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly

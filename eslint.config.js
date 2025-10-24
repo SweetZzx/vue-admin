@@ -7,18 +7,13 @@ import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 // import autoImport from '.eslint-auto-import.json';
 
-import { createRequire } from 'module';
+import { readFileSync } from 'fs';
 
-const require = createRequire(import.meta.url);
-
-// 安全地加载自动导入配置，如果文件不存在则使用默认配置
+// 自动导入配置
 let autoImport = { globals: {} };
 try {
-  autoImport = require('./.eslint-auto-import.json');
-} catch (error) {
-  console.warn(
-    'Warning: .eslint-auto-import.json not found, using empty globals'
-  );
+  autoImport = JSON.parse(readFileSync('./.eslintrc-auto-import.json', 'utf8'));
+} catch {
   autoImport = { globals: {} };
 }
 
@@ -74,6 +69,11 @@ export default defineConfig([
       'vue/no-mutating-props': 'warn',
       'vue/require-default-prop': 'off', // 不强制 props 默认值
       'vue/require-prop-types': 'off', // 不强制 props 类型（TS 已处理）
+
+      'no-undef': 'warn',
+      'no-unused-vars': 'warn',
+      'no-unused-expressions': 'warn',
+      'no-implicit-globals': 'warn',
 
       // 代码质量规则
       'prefer-const': 'warn',
