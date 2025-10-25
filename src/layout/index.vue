@@ -1,16 +1,16 @@
 <template>
   <div class="app-wrapper">
     <div class="sidebar-container">
-      <Sidebar />
+      <sidebar></sidebar>
     </div>
     <div class="main-container">
       <div class="header">
-        <navbar />
+        <!--这个是导航条-->
+        <navbar></navbar>
         <div class="tags-view">导航条2</div>
       </div>
-      <div class="app-main">
-        <router-view></router-view>
-      </div>
+      <!--这个是核心渲染的部分-->
+      <app-main></app-main>
     </div>
   </div>
 </template>
@@ -34,10 +34,6 @@
     .tags-view {
       @apply h-[var(--tagsview-height)] bg-blue;
     }
-  }
-  .app-main {
-    @apply bg-cyan;
-    min-height: calc(100vh - var(--tagsview-height) - var(--navbar-height));
   }
 }
 </style>
