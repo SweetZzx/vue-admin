@@ -58,8 +58,7 @@
     "sourcemap",
     "treeshake",
     "hotreload",
-    "hmr",
-    "typeof"
+    "hmr"
   ],
   "flagWords": [],
   "ignorePaths": [

@@ -47,7 +47,6 @@ export default defineConfig({
       dts: true,
       extensions: ['vue'],
       deep: true
-      // directoryAsNamespace: false
     }),
     ElementPlus({})
   ],

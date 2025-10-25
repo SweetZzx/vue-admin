@@ -4,6 +4,7 @@ import { createPinia } from 'pinia';
 import router from './router';
 import 'normalize.css/normalize.css';
 import element from './plugins/element';
+import pininPluginPersistedstate from 'pinia-plugin-persistedstate';
 // import ElementPlus from 'element-plus';
 // import 'element-plus/dist/index.css';
 import 'uno.css';
@@ -11,6 +12,7 @@ import '@/style/index.scss';
 
 const app = createApp(App);
 const pinia = createPinia();
+pinia.use(pininPluginPersistedstate);
 app.use(router);
 app.use(pinia);
 app.use(element);

@@ -5,7 +5,7 @@
     </div>
     <div class="main-container">
       <div class="header">
-        <div class="navbar">导航条1</div>
+        <navbar />
         <div class="tags-view">导航条2</div>
       </div>
       <div class="app-main">
@@ -19,16 +19,17 @@
 .app-wrapper {
   @apply flex w-full h-full;
   .sidebar-container {
-    @apply bg-red w-[var(--sidebar-width)];
+    //跨组件设置样式
+    :deep(.sidebar-container-menu:not(.el-menu--collapse)) {
+      @apply w-[var(--sidebar-width)];
+    }
   }
   .main-container {
     @apply flex-1 flex-col flex;
   }
   .header {
     @apply h-[84px];
-    .navbar {
-      @apply h-[var(--navbar-height)] bg-yellow;
-    }
+
     .tags-view {
       @apply h-[var(--tagsview-height)] bg-blue;
     }
