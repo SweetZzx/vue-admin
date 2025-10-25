@@ -43,7 +43,11 @@ export default defineConfig({
       //组件
       resolvers: [ElementPlusResolver()],
       //所有组件可以自动加载
-      dirs: ['src/components', 'src/layout/components']
+      dirs: ['src/components', 'src/layout/components'],
+      dts: true,
+      extensions: ['vue'],
+      deep: true
+      // directoryAsNamespace: false
     }),
     ElementPlus({})
   ],
