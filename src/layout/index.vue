@@ -20,6 +20,7 @@
   @apply flex w-full h-full;
   .sidebar-container {
     //跨组件设置样式
+    @apply bg-[var(--menu-bg)];
     :deep(.sidebar-container-menu:not(.el-menu--collapse)) {
       @apply w-[var(--sidebar-width)];
     }

@@ -13,11 +13,13 @@
   },
   "dependencies": {
     "@iconify/vue": "^5.0.0",
+    "@types/path-browserify": "^1.0.3",
     "@unocss/preset-icons": "^66.5.4",
     "@unocss/transformer-directives": "^66.5.4",
     "element-plus": "^2.11.5",
     "husky": "^9.1.7",
     "normalize.css": "^8.0.1",
+    "path-browserify": "^1.0.1",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
     "unplugin-element-plus": "^0.10.0",
