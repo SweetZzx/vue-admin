@@ -4,8 +4,12 @@
 
     <breadcrumb></breadcrumb>
 
-    <div flex justify-end flex-1 items-center>
-      <screenfull></screenfull>
+    <div flex justify-end flex-1 items-center mr-50px>
+      <screenfull mx-5px></screenfull>
+      <el-tooltip content="changeSize" placement="bottom">
+        <size-select></size-select>
+      </el-tooltip>
+      <avatar></avatar>
     </div>
   </div>
 </template>

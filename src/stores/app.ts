@@ -1,10 +1,13 @@
+import type { Size } from '@/plugins/element';
+
 export const useAppStore = defineStore(
   'app',
   () => {
     const state = reactive({
       sidebar: {
         opened: true
-      }
+      },
+      size: 'default' as Size
     });
 
     const sidebar = computed(() => state.sidebar);
@@ -13,12 +16,17 @@ export const useAppStore = defineStore(
       state.sidebar.opened = !state.sidebar.opened;
     };
 
-    return { state, sidebar, toggleSidebar };
+    const size = computed(() => state.size);
+    const setSize = (size: Size) => {
+      state.size = size;
+    };
+
+    return { state, sidebar, toggleSidebar, size, setSize };
   },
   {
     persist: {
       storage: window.localStorage,
-      pick: ['state.sidebar']
+      pick: ['state.sidebar', 'state.size']
     }
   }
 );
