@@ -9,5 +9,6 @@ declare module 'vue-router' {
     roles?: string[];
     hidden?: boolean;
     alwaysShow?: boolean;
+    breadcrumb?: boolean;
   }
 }

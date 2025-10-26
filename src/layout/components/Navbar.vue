@@ -1,6 +1,8 @@
 <template>
   <div class="navbar">
     <hamburger @toggleCollapse="toggleSidebar" :collapse="sidebar.opened" />
+
+    <breadcrumb></breadcrumb>
   </div>
 </template>
 

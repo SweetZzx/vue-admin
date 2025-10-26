@@ -39,6 +39,22 @@ const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/test',
+    component: Layout,
+    redirect: '/test/index',
+    children: [
+      {
+        path: 'index/:id',
+        name: 'test',
+        component: () => import('@/views/test/index.vue'),
+        meta: {
+          icon: 'ant-design:database-filled',
+          title: 'test'
+        }
+      }
+    ]
+  },
+  {
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
@@ -61,7 +77,8 @@ const asyncRoutes: RouteRecordRaw[] = [
     meta: {
       icon: 'ant-design:setting-outlined',
       title: 'system',
-      alwaysShow: true
+      alwaysShow: true,
+      breadcrumb: false
     },
     children: [
       {
