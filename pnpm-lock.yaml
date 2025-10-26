@@ -41,6 +41,9 @@ importers:
       pinia-plugin-persistedstate:
         specifier: ^4.5.0
         version: 4.5.0(pinia@3.0.3(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3)))
+      screenfull:
+        specifier: ^6.0.2
+        version: 6.0.2
       unplugin-element-plus:
         specifier: ^0.10.0
         version: 0.10.0
@@ -1923,6 +1926,10 @@ packages:
     resolution: {integrity: sha512-t+YPtOQHpGW1QWsh1CHQ5cPIr9lbbGZLZnbihP/D/qZj/yuV68m8qarcV17nvkOX81BCrvzAlq2klCQFZghyTg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
+
+  screenfull@6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
 
   scule@1.3.0:
     resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
@@ -4063,6 +4070,8 @@ snapshots:
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.1
+
+  screenfull@6.0.2: {}
 
   scule@1.3.0: {}
 
