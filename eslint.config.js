@@ -60,7 +60,9 @@ export default defineConfig([
         'warn',
         {
           argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_'
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+          args: 'after-used'
         }
       ], // 未使用变量警告，忽略下划线开头的变量
 

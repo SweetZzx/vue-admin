@@ -7,7 +7,7 @@
       <div class="header">
         <!--这个是导航条-->
         <navbar></navbar>
-        <div class="tags-view">导航条2</div>
+        <tags-view></tags-view>
       </div>
       <!--这个是核心渲染的部分-->
       <app-main></app-main>
@@ -26,14 +26,10 @@
     }
   }
   .main-container {
-    @apply flex-1 flex-col flex;
+    @apply flex-1 flex-col flex overflow-hidden;
   }
   .header {
-    @apply h-[84px];
-
-    .tags-view {
-      @apply h-[var(--tagsview-height)] bg-blue;
-    }
+    @apply h-84px;
   }
 }
 </style>

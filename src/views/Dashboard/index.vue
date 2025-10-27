@@ -19,6 +19,9 @@
 </template>
 
 <script lang="ts" setup>
+defineOptions({
+  name: 'dashboard'
+});
 const { proxy } = getCurrentInstance()!;
 const handle = () => {
   proxy?.$message('this is a message');

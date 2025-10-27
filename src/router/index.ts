@@ -14,7 +14,9 @@ const staticRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/Dashboard/index.vue'),
         meta: {
           icon: 'ant-design:bank-outlined',
-          title: 'Dashboard'
+          title: 'Dashboard',
+          affix: true,
+          noCache: false
         }
       }
     ]
@@ -84,10 +86,12 @@ const asyncRoutes: RouteRecordRaw[] = [
       {
         path: 'menu',
         name: 'menu',
+
         component: () => import('@/views/system/menu.vue'),
         meta: {
           icon: 'ant-design:menu-outlined',
-          title: 'menu'
+          title: 'menu',
+          noCache: true
         }
       },
       {

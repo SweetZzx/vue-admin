@@ -1,9 +1,15 @@
+<script lang="ts" setup>
+import { useTagsViewStore } from '@/stores/tagsView';
+const store = useTagsViewStore();
+const includes = computed(() => store.cacheViews as string[]);
+</script>
+
 <template>
   <div class="app-main">
     <router-view v-slot="{ Component }">
       <!--组件持久化-->
       <transition name="fade">
-        <keep-alive>
+        <keep-alive :include="includes">
           <component :is="Component"></component>
         </keep-alive>
       </transition>
