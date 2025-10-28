@@ -23,6 +23,7 @@ declare global {
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getToken: typeof import('./src/utils/auth').getToken
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isExternal: typeof import('./src/utils/validate').isExternal
@@ -58,10 +59,12 @@ declare global {
   const reactive: typeof import('vue').reactive
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
+  const removeToken: typeof import('./src/utils/auth').removeToken
   const resolveComponent: typeof import('vue').resolveComponent
   const setActivePinia: typeof import('pinia').setActivePinia
   const setColors: typeof import('./src/utils/color').setColors
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
+  const setToken: typeof import('./src/utils/auth').setToken
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef

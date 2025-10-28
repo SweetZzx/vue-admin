@@ -33,6 +33,14 @@ const staticRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/redirect/index.vue')
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    meta: {
+      hidden: true
+    },
+    component: () => import('@/views/login/index.vue')
   }
 ];
 

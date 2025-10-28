@@ -53,5 +53,14 @@ export default defineConfig({
 
   resolve: {
     alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }]
+  },
+  server: {
+    proxy: {
+      '/dev-api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dev-api/, '/api')
+      }
+    }
   }
 });
