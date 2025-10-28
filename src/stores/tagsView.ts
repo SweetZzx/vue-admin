@@ -15,15 +15,15 @@ export const useTagsViewStore = defineStore('tagsView', () => {
     }
   };
   const addView = (view: RouteLocationNormalizedLoadedGeneric) => {
-    //当前添加的视图是否已经存在,存在则不再添加
+    //当前添加的视图是否已经存在,存在过则不再添加
     const exits = visitedViews.value.some((v) => v.path === view.path);
+    addCacheView(view);
     if (exits) return;
     const newView = { ...view, title: view.meta.title };
     visitedViews.value.push(newView);
-    addCacheView(view); //添加缓存
   };
 
-  const deleteCacheView = (view: RouteLocationNormalizedLoadedGeneric) => {
+  const delCacheView = (view: RouteLocationNormalizedLoadedGeneric) => {
     const index = cacheViews.value.indexOf(view.name);
     if (index > -1) {
       cacheViews.value.splice(index, 1);
@@ -35,7 +35,7 @@ export const useTagsViewStore = defineStore('tagsView', () => {
     if (index > -1) {
       visitedViews.value.splice(index, 1);
     }
-    deleteCacheView(view);
+    delCacheView(view);
   };
 
   const delAllViews = () => {
@@ -51,8 +51,13 @@ export const useTagsViewStore = defineStore('tagsView', () => {
   };
 
   const refreshView = (view: RouteLocationNormalizedLoadedGeneric) => {
-    deleteView(view);
-    addView(view);
+    // 只删除缓存，保留标签页
+    delCacheView(view);
+
+    // 可选：重新添加到缓存（如果需要继续缓存的话）
+    nextTick(() => {
+      addCacheView(view);
+    });
   };
 
   return {
@@ -62,6 +67,7 @@ export const useTagsViewStore = defineStore('tagsView', () => {
     cacheViews,
     delAllViews,
     delOtherViews,
-    refreshView
+    refreshView,
+    delCacheView
   };
 });

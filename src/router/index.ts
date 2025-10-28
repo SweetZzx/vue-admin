@@ -11,13 +11,26 @@ const staticRoutes: RouteRecordRaw[] = [
       {
         path: '/dashboard',
         name: 'dashboard',
-        component: () => import('@/views/Dashboard/index.vue'),
+        component: () => import('@/views/dashboard/index.vue'),
         meta: {
           icon: 'ant-design:bank-outlined',
           title: 'Dashboard',
           affix: true,
           noCache: false
         }
+      }
+    ]
+  },
+  {
+    path: '/redirect',
+    component: Layout,
+    meta: {
+      hidden: true
+    },
+    children: [
+      {
+        path: ':path(.*)',
+        component: () => import('@/views/redirect/index.vue')
       }
     ]
   }

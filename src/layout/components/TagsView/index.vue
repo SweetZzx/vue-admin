@@ -12,7 +12,14 @@ const isActive = (tag: RouteLocationNormalizedGeneric) =>
 const isAffix = (tag: RouteLocationNormalizedGeneric) => tag.meta?.affix;
 
 const store = useTagsViewStore();
-const { deleteView, addView, delAllViews, delOtherViews, refreshView } = store;
+const {
+  deleteView,
+  addView,
+  delAllViews,
+  delOtherViews,
+  refreshView,
+  delCacheView
+} = store;
 const { visitedViews } = storeToRefs(store);
 
 const route = useRoute();
@@ -97,7 +104,13 @@ const handleCommand = (
       closeSelectedTag(view);
       break;
     case CommandType.Refresh:
+      // 先删除缓存
       refreshView(view);
+
+      // 通过重定向实现页面刷新
+      nextTick(() => {
+        router.push(`/redirect${view.path}`);
+      });
       break;
   }
 };
