@@ -4,6 +4,8 @@ interface IVaraibles {
   menuBg: string;
   menuBorder: string;
   theme: string;
+  navBarHeight: string;
+  tagsViewHeight: string;
 }
 
 export const varaibles: IVaraibles;

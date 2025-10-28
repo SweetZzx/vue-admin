@@ -3,6 +3,7 @@ import variables from '@/style/variables.module.scss';
 interface ISettings {
   theme: string;
   originalTheme: string;
+  tagsView: boolean;
   // 方便以后扩展
   sidebarCollapsed?: boolean;
   language?: string;
@@ -13,7 +14,8 @@ export const useSettingStore = defineStore(
   () => {
     const settings: ISettings = reactive({
       theme: variables.theme || '#1e90ff',
-      originalTheme: ''
+      originalTheme: '',
+      tagsView: true
     });
 
     const changeSetting = <K extends keyof ISettings>(
@@ -28,7 +30,7 @@ export const useSettingStore = defineStore(
   {
     persist: {
       storage: window.sessionStorage,
-      pick: ['settings.theme']
+      pick: ['settings.theme', 'settings.tagsView']
     }
   }
 );
