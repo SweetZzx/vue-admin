@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useTagsViewStore } from '@/stores/tagsView';
+import { useSettingStore } from '@/stores/settings';
 import type {
   RouteLocationNormalizedGeneric,
   RouteRecordRaw
@@ -11,16 +12,10 @@ const isActive = (tag: RouteLocationNormalizedGeneric) =>
   tag.path === route.path;
 const isAffix = (tag: RouteLocationNormalizedGeneric) => tag.meta?.affix;
 
-const store = useTagsViewStore();
-const {
-  deleteView,
-  addView,
-  delAllViews,
-  delOtherViews,
-  refreshView,
-  delCacheView
-} = store;
-const { visitedViews } = storeToRefs(store);
+const tagsViewStore = useTagsViewStore();
+const { deleteView, addView, delAllViews, delOtherViews, delCacheView } =
+  tagsViewStore;
+const { visitedViews } = storeToRefs(tagsViewStore);
 
 const route = useRoute();
 const router = useRouter();
@@ -105,7 +100,7 @@ const handleCommand = (
       break;
     case CommandType.Refresh:
       // 先删除缓存
-      refreshView(view);
+      delCacheView(view);
 
       // 通过重定向实现页面刷新
       nextTick(() => {
@@ -114,6 +109,8 @@ const handleCommand = (
       break;
   }
 };
+const settingsStore = useSettingStore();
+const theme = computed(() => settingsStore.settings.theme);
 </script>
 
 <template>
@@ -123,6 +120,10 @@ const handleCommand = (
         class="tags-view-item"
         v-for="(tag, index) in visitedViews"
         :class="{ active: isActive(tag) }"
+        :style="{
+          backgroundColor: isActive(tag) ? theme : '',
+          borderColor: isActive(tag) ? theme : ''
+        }"
         :key="index"
         :to="{ path: tag.path, query: tag.query }"
       >
@@ -162,7 +163,7 @@ const handleCommand = (
   @apply inline-block h-28px leading-28px border-solid border-gray px-3px mx-3px box-border text-black;
 
   &.active {
-    @apply bg-green text-white  border-none;
+    @apply text-white  border-none;
     &::before {
       content: '';
       @apply inline-block w-8px h-8px rounded-full bg-white mr-3px;

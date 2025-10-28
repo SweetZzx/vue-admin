@@ -6,7 +6,10 @@
 
 <script lang="ts" setup>
 import { useAppStore } from './stores/app';
+import { useGenerateTheme } from '@/hooks/useGenerateTheme';
 const store = useAppStore();
+
+useGenerateTheme();
 </script>
 
 <style scoped></style>

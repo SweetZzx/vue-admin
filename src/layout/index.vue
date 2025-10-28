@@ -1,3 +1,10 @@
+<script lang="ts" setup>
+const setting = ref(false);
+const openSetting = () => {
+  setting.value = true;
+};
+</script>
+
 <template>
   <div class="app-wrapper">
     <div class="sidebar-container">
@@ -6,12 +13,17 @@
     <div class="main-container">
       <div class="header">
         <!--这个是导航条-->
-        <navbar></navbar>
+        <navbar @showSetting="openSetting"></navbar>
         <tags-view></tags-view>
       </div>
       <!--这个是核心渲染的部分-->
       <app-main></app-main>
     </div>
+    <!--这个是抽屉组件(设置)-->
+    <right-panel v-model="setting" title="设置主题色">
+      <!--设置功能-->
+      <Settings> </Settings>
+    </right-panel>
   </div>
 </template>
 

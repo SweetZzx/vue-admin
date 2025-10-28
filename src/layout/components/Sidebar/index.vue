@@ -5,7 +5,7 @@
     :default-active="defaultActive"
     :background-color="varaibles.menuBg"
     :text-color="varaibles.menuText"
-    :active-text-color="varaibles.menuActiveText"
+    :active-text-color="theme"
     :collapse="sidebar.opened"
   >
     <sidebar-item
@@ -19,6 +19,8 @@
 
 <script lang="ts" setup>
 import { useAppStore } from '@/stores/app';
+import { useSettingStore } from '@/stores/settings';
+
 import varaibles from '@/style/variables.module.scss';
 import { routes } from '@/router';
 
@@ -27,4 +29,7 @@ const route = useRoute();
 const defaultActive = computed(() => {
   return route.path;
 });
+
+const settingsStore = useSettingStore();
+const theme = computed(() => settingsStore.settings.theme);
 </script>
