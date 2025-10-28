@@ -4,6 +4,7 @@ interface ISettings {
   theme: string;
   originalTheme: string;
   tagsView: boolean;
+  sidebarLogo: boolean;
   // 方便以后扩展
   sidebarCollapsed?: boolean;
   language?: string;
@@ -15,7 +16,8 @@ export const useSettingStore = defineStore(
     const settings: ISettings = reactive({
       theme: variables.theme || '#1e90ff',
       originalTheme: '',
-      tagsView: true
+      tagsView: true,
+      sidebarLogo: true
     });
 
     const changeSetting = <K extends keyof ISettings>(
@@ -30,7 +32,7 @@ export const useSettingStore = defineStore(
   {
     persist: {
       storage: window.sessionStorage,
-      pick: ['settings.theme', 'settings.tagsView']
+      pick: ['settings.theme', 'settings.tagsView', 'settings.sidebarLogo']
     }
   }
 );
