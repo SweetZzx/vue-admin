@@ -41,6 +41,14 @@ const staticRoutes: RouteRecordRaw[] = [
       hidden: true
     },
     component: () => import('@/views/login/index.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      hidden: true
+    },
+    component: () => import('@/views/register/index.vue')
   }
 ];
 
@@ -156,5 +164,5 @@ export const routes = [...staticRoutes, ...asyncRoutes];
 
 export default createRouter({
   routes, //路由表
-  history: createWebHistory() //路由模式
+  history: createWebHistory(import.meta.env.BASE_URL) //路由模式
 });
