@@ -33,8 +33,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
-          run_install: false
+          version: 10.18.3 # 🔥 使用和你本地相同的版本
 
       - name: Get pnpm store directory
         shell: bash
@@ -53,7 +52,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: pnpm build
+        run: pnpm run build
         env:
           VITE_API_URL: 'http://47.109.145.118:8080'
 
