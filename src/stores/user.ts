@@ -51,15 +51,12 @@ export const useUserStore = defineStore('user', () => {
     state.userInfo = null;
     removeToken();
 
-    // 可能还需要清除其他本地存储
-    localStorage.removeItem('userInfo');
-
     ElMessage.success('退出成功');
   };
 
   // 添加初始化方法，页面刷新时恢复用户信息
   const initUserInfo = () => {
-    const token = localStorage.getItem('token');
+    const token = getToken();
     const userInfo = localStorage.getItem('userInfo');
 
     if (token && userInfo) {
@@ -68,7 +65,6 @@ export const useUserStore = defineStore('user', () => {
         state.userInfo = JSON.parse(userInfo);
       } catch (error) {
         console.error('解析用户信息失败:', error);
-        localStorage.removeItem('userInfo');
       }
     }
   };

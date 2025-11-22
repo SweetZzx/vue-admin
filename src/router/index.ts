@@ -102,44 +102,53 @@ const asyncRoutes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/system',
+    path: '/role',
     component: Layout,
-    redirect: '/system/menu',
+    redirect: '/role/person',
     meta: {
       icon: 'ant-design:setting-outlined',
-      title: 'system',
-      alwaysShow: true,
+      title: 'role',
+      alwaysShow: false,
       breadcrumb: false
     },
     children: [
       {
-        path: 'menu',
-        name: 'menu',
-
-        component: () => import('@/views/system/menu.vue'),
-        meta: {
-          icon: 'ant-design:menu-outlined',
-          title: 'menu',
-          noCache: true
-        }
-      },
-      {
-        path: 'role',
-        name: 'role',
-        component: () => import('@/views/system/role.vue'),
+        path: 'admin',
+        name: 'admin',
+        component: () => import('@/views/role/admin.vue'),
         meta: {
           icon: 'ant-design:user-outlined',
-          title: 'role',
-          hidden: true
+          title: 'admin',
+          hidden: false
         }
       },
       {
         path: 'user',
         name: 'user',
-        component: () => import('@/views/system/user.vue'),
+        component: () => import('@/views/role/user.vue'),
         meta: {
           icon: 'ant-design:user-outlined',
           title: 'user'
+        }
+      },
+      {
+        path: 'person',
+        name: 'person',
+
+        component: () => import('@/views/role/person.vue'),
+        meta: {
+          icon: 'ant-design:menu-outlined',
+          title: 'person',
+          noCache: true
+        }
+      },
+      {
+        path: 'changepassword',
+        name: 'changepassword',
+        component: () => import('@/views/role/changepassword.vue'),
+        meta: {
+          icon: 'ant-design:lock-outlined',
+          title: 'changepassword'
         }
       }
     ]

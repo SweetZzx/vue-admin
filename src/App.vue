@@ -12,7 +12,7 @@ import { useGenerateTheme } from '@/hooks/useGenerateTheme';
 const store = useAppStore();
 const { initUserInfo } = useUserStore();
 onMounted(() => {
-  initUserInfo();
+  // initUserInfo();
   useGenerateTheme();
 });
 </script>

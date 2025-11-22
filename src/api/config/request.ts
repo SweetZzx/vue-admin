@@ -8,7 +8,7 @@ import router from '@/router';
 const getBaseURL = () => {
   if (import.meta.env.DEV) {
     // 开发环境使用代理
-    return import.meta.env.VITE_BASE_API;
+    return 'http://47.109.145.118:8080';
   } else {
     // 🔥 生产环境直接调用服务器 API
     return import.meta.env.VITE_API_URL || 'http://47.109.145.118:8080';
@@ -16,7 +16,12 @@ const getBaseURL = () => {
 };
 
 const config = {
-  baseURL: getBaseURL(),
+  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://47.109.145.118:8080',
+  // baseURL: 'http://sweetzzx.dpdns.org',
+
+  // baseURL: 'https://api.sweetzzx.dpdns.org',
+
   timeout: 30000
 };
 
@@ -27,12 +32,14 @@ service.interceptors.request.use(
   (config) => {
     // 设置内容类型
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
+    const user = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    config.headers['token'] = user.token;
 
-    // 添加token
-    const token = getToken();
-    if (token) {
-      config.headers.token = `Bearer ${token}`;
-    }
+    // // 开发环境打印请求信息（可选）
+    // if (import.meta.env.DEV) {
+    //   console.log('请求地址:', config.baseURL + config.url);
+    // }
+    console.log(config);
     return config;
   },
   (error) => {
@@ -56,11 +63,11 @@ service.interceptors.response.use(
     // 处理认证失败
     if (code === '401') {
       ElMessage.error(res.msg || res.message || 'token已过期，请重新登录');
-      // 清除token并跳转登录页
-      removeToken();
-      const store = useUserStore();
-      store.logout();
-      router.push('/login');
+      // // 清除token并跳转登录页
+      // removeToken();
+      // const store = useUserStore();
+      // store.logout();
+      // router.push('/login');
       return Promise.reject(res);
     }
 
@@ -83,11 +90,11 @@ service.interceptors.response.use(
       switch (status) {
         case 401: {
           errorMessage = 'token已过期，请重新登录';
-          // 清除token并跳转登录页
-          removeToken();
-          const store = useUserStore();
-          store.logout();
-          router.push('/login');
+          // // 清除token并跳转登录页
+          // removeToken();
+          // const store = useUserStore();
+          // store.logout();
+          // router.push('/login');
           break;
         }
         case 403:

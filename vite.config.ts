@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
         mode === 'development'
           ? {
               '/dev-api': {
-                target: env.VITE_API_URL || 'http://localhost:9999',
+                target: 'http://localhost:9999',
                 changeOrigin: true,
                 // 把 /dev-api/login -> /login
                 rewrite: (p) => p.replace(/^\/dev-api/, ''),

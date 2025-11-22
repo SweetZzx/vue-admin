@@ -44,7 +44,7 @@ const outerHeight = computed(() =>
 <style lang="scss" scoped>
 .app-wrapper {
   .app-main {
-    @apply bg-cyan overflow-hidd pos-relative;
+    @apply overflow-hidden pos-relative;
     min-height: calc(100vh - v-bind(outerHeight));
   }
   @apply flex w-full h-full;
