@@ -4,23 +4,23 @@ import { getToken, removeToken } from '@/utils/auth';
 import { ElMessage } from 'element-plus';
 import router from '@/router';
 
-// 🔥 根据环境设置 baseURL
-const getBaseURL = () => {
-  if (import.meta.env.DEV) {
-    // 开发环境使用代理
-    return 'http://47.109.145.118:8080';
-  } else {
-    // 🔥 生产环境直接调用服务器 API
-    return import.meta.env.VITE_API_URL || 'http://47.109.145.118:8080';
-  }
-};
+// // 🔥 根据环境设置 baseURL
+// const getBaseURL = () => {
+//   if (import.meta.env.DEV) {
+//     // 开发环境使用代理
+//     return 'http://47.109.145.118:8080';
+//   } else {
+//     // 🔥 生产环境直接调用服务器 API
+//     return import.meta.env.VITE_API_URL || 'http://47.109.145.118:8080';
+//   }
+// };
 
 const config = {
   // baseURL: 'http://localhost:8080',
   // baseURL: 'http://47.109.145.118:8080',
-  // baseURL: 'http://sweetzzx.dpdns.org',
+  baseURL: 'https://sweetzzx.dpdns.org',
 
-  baseURL: 'https://api.sweetzzx.dpdns.org',
+  // baseURL: 'https://api.sweetzzx.dpdns.org',
 
   timeout: 30000
 };
