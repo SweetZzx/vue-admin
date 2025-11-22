@@ -97,7 +97,7 @@
       >
         <el-form-item prop="img" label="攻略主图">
           <el-upload
-            action="http://localhost:8080/files/upload"
+            action="https://sweetzzx.dpdns.org/files/upload"
             :headers="{ token: data.user.token }"
             :on-success="handleFileSuccess"
             list-type="picture"
@@ -191,7 +191,7 @@ editorConfig.MENU_CONF['uploadImage'] = {
   headers: {
     token: data.user.token
   },
-  server: 'http://localhost:8080/files/wang/upload', // 服务端图片上传接口
+  server: 'https://sweetzzx.dpdns.org/files/wang/upload', // 服务端图片上传接口
   fieldName: 'file' // 服务端图片上传接口参数
 };
 // 组件销毁时，也及时销毁编辑器，否则可能会造成内存泄漏

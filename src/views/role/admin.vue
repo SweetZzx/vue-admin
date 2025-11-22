@@ -24,7 +24,7 @@
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
         style="display: inline-block; margin-left: 10px"
-        action="http://localhost:8080/admin/import"
+        action="https://sweetzzx.dpdns.org/admin/import"
         :show-file-list="false"
         :on-success="handleImportSuccess"
       >
@@ -309,7 +309,7 @@ const exportData = () => {
   // `https://sweetzzx.dpdns.org/admin/export?username=${data.username === null ? '' : data.username}` +
 
   const url =
-    `http://localhost:8080/admin/export?username=${data.username === null ? '' : data.username}` +
+    `https://sweetzzx.dpdns.org/admin/export?username=${data.username === null ? '' : data.username}` +
     `&name=${data.name === null ? '' : data.name}` +
     `&ids=${idsStr}` +
     `&token=${data.user.token}`;

@@ -24,7 +24,7 @@
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
         style="display: inline-block; margin-left: 10px"
-        action="http://localhost:8080/user/import"
+        action="https://sweetzzx.dpdns.org/user/import"
         :show-file-list="false"
         :on-success="handleImportSuccess"
       >
@@ -133,7 +133,7 @@
         </el-form-item>
         <el-form-item prop="avatar" label="头像">
           <el-upload
-            action="http://localhost:8080/files/upload"
+            action="https://sweetzzx.dpdns.org/files/upload"
             :headers="{ token: data.user.token }"
             :on-success="handleFileSuccess"
             list-type="picture"
@@ -308,7 +308,7 @@ const deleteBatch = () => {
 const exportData = () => {
   const idsStr = data.ids.join(','); // 把数组转换成  字符串  [1,2,3]  ->  "1,2,3"
   const url =
-    `http://localhost:8080/user/export?username=${data.username === null ? '' : data.username}` +
+    `https://sweetzzx.dpdns.org/user/export?username=${data.username === null ? '' : data.username}` +
     `&name=${data.name === null ? '' : data.name}` +
     `&ids=${idsStr}` +
     `&token=${data.user.token}`;
