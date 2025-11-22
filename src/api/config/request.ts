@@ -16,11 +16,11 @@ const getBaseURL = () => {
 };
 
 const config = {
-  baseURL: 'http://localhost:8080',
+  // baseURL: 'http://localhost:8080',
   // baseURL: 'http://47.109.145.118:8080',
   // baseURL: 'http://sweetzzx.dpdns.org',
 
-  // baseURL: 'https://api.sweetzzx.dpdns.org',
+  baseURL: 'https://api.sweetzzx.dpdns.org',
 
   timeout: 30000
 };
