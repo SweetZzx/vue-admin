@@ -64,32 +64,14 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      // 🔥 只在开发环境使用代理
-      proxy:
-        mode === 'development'
-          ? {
-              '/dev-api': {
-                target: 'http://localhost:9999',
-                changeOrigin: true,
-                // 把 /dev-api/login -> /login
-                rewrite: (p) => p.replace(/^\/dev-api/, ''),
-                // 可选：打印代理信息，方便定位 500
-                configure: (proxy) => {
-                  proxy.on('error', (err) => {
-                    console.log('proxy error:', err);
-                  });
-                  proxy.on('proxyReq', (proxyReq) => {
-                    console.log(
-                      'proxy to:',
-                      proxyReq.protocol,
-                      proxyReq.host,
-                      proxyReq.path
-                    );
-                  });
-                }
-              }
-            }
-          : undefined
+      // 🔥 开发环境代理配置
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '/') // 移除 /api 前缀
+        }
+      }
     }
   };
 });

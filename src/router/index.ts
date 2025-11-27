@@ -13,7 +13,7 @@ const staticRoutes: RouteRecordRaw[] = [
         name: 'dashboard',
         component: () => import('@/views/dashboard/index.vue'),
         meta: {
-          icon: 'ant-design:bank-outlined',
+          icon: 'ant-design:dashboard-outlined',
           title: 'Dashboard',
           affix: true,
           noCache: false
@@ -63,8 +63,8 @@ const asyncRoutes: RouteRecordRaw[] = [
         name: 'documentation',
         component: () => import('@/views/documentation/index.vue'),
         meta: {
-          icon: 'ant-design:database-filled',
-          title: 'documentation'
+          icon: 'ant-design:book-outlined',
+          title: 'Documentation'
         }
       }
     ]
@@ -79,8 +79,8 @@ const asyncRoutes: RouteRecordRaw[] = [
         name: 'test',
         component: () => import('@/views/test/index.vue'),
         meta: {
-          icon: 'ant-design:database-filled',
-          title: 'test'
+          icon: 'ant-design:experiment-outlined', // 添加测试的图标
+          title: 'Test'
         }
       }
     ]
@@ -95,8 +95,8 @@ const asyncRoutes: RouteRecordRaw[] = [
         name: 'guide',
         component: () => import('@/views/guide/index.vue'),
         meta: {
-          icon: 'ant-design:question-circle-outlined',
-          title: 'guide'
+          icon: 'ant-design:star-outlined',
+          title: 'Guide'
         }
       }
     ]
@@ -106,8 +106,8 @@ const asyncRoutes: RouteRecordRaw[] = [
     component: Layout,
     redirect: '/role/person',
     meta: {
-      icon: 'ant-design:setting-outlined',
-      title: 'role',
+      icon: 'ant-design:team-outlined',
+      title: 'Role',
       alwaysShow: false,
       breadcrumb: false
     },
@@ -117,8 +117,8 @@ const asyncRoutes: RouteRecordRaw[] = [
         name: 'admin',
         component: () => import('@/views/role/admin.vue'),
         meta: {
-          icon: 'ant-design:user-outlined',
-          title: 'admin',
+          icon: 'ant-design:setting-outlined', // 添加管理员的图标
+          title: 'Admin',
           hidden: false
         }
       },
@@ -128,17 +128,16 @@ const asyncRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/role/user.vue'),
         meta: {
           icon: 'ant-design:user-outlined',
-          title: 'user'
+          title: 'User'
         }
       },
       {
         path: 'person',
         name: 'person',
-
         component: () => import('@/views/role/person.vue'),
         meta: {
-          icon: 'ant-design:menu-outlined',
-          title: 'person',
+          icon: 'ant-design:contacts-outlined',
+          title: 'Person',
           noCache: true
         }
       },
@@ -148,7 +147,7 @@ const asyncRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/role/changepassword.vue'),
         meta: {
           icon: 'ant-design:lock-outlined',
-          title: 'changepassword'
+          title: 'Change Password'
         }
       }
     ]
@@ -162,7 +161,7 @@ const asyncRoutes: RouteRecordRaw[] = [
         redirect: '/',
         meta: {
           icon: 'ant-design:link-outlined',
-          title: 'Link'
+          title: 'External Link'
         }
       }
     ]
@@ -172,6 +171,6 @@ const asyncRoutes: RouteRecordRaw[] = [
 export const routes = [...staticRoutes, ...asyncRoutes];
 
 export default createRouter({
-  routes, //路由表
-  history: createWebHistory(import.meta.env.BASE_URL) //路由模式
+  routes, // 路由表
+  history: createWebHistory(import.meta.env.BASE_URL) // 路由模式
 });

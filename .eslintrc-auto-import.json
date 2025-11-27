@@ -69,7 +69,6 @@
     "readonly": true,
     "ref": true,
     "removeToken": true,
-    "request": true,
     "resolveComponent": true,
     "setActivePinia": true,
     "setColors": true,

@@ -1,0 +1,104 @@
+﻿# Vue Admin Project - Agent Instructions
+
+## Project Overview
+This is a modern Vue 3 admin dashboard with TypeScript and comprehensive tooling.
+
+## Tech Stack
+- Vue 3 with Composition API and TypeScript
+- Element Plus UI framework
+- Pinia for state management with persistence
+- Vue Router for navigation
+- Vite for build tooling
+- UnoCSS for atomic CSS
+- ECharts for data visualization
+- Axios for HTTP requests
+
+## Key Features
+- Auto-import for Vue APIs and components
+- Development proxy for API calls (`/dev-api` -> `http://localhost:9999`)
+- Responsive dashboard with user profile, data tables, and charts
+- Role-based routing system
+- Git hooks with Husky for code quality
+
+## Project Structure
+```
+src/
+├── api/          # API service modules
+├── assets/       # Static assets
+├── components/   # Reusable components
+├── hooks/        # Custom hooks/composables
+├── layout/       # Layout components
+├── plugins/      # Plugin configurations
+├── router/       # Route configuration (static + async routes)
+├── stores/       # Pinia state stores
+├── style/        # Global styles
+├── utils/        # Utility functions and composables
+├── views/        # Page components
+│   ├── dashboard/    # Main dashboard with charts
+│   ├── login/        # Login page
+│   ├── register/     # Registration page
+│   ├── role/         # Role management pages
+│   └── ...           # Other feature pages
+├── App.vue       # Root component
+└── main.ts       # Application entry point
+```
+
+## Development Commands
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm lint` - Run ESLint
+- `pnpm lint:fix` - Fix ESLint issues
+- `pnpm format` - Format code with Prettier
+- `pnpm format:check` - Check code formatting
+- `pnpm preview` - Preview production build
+
+## Configuration Highlights
+- Vite config with auto-imports and Element Plus integration
+- Proxy setup for API calls in development
+- Path alias: `@` points to `src/`
+- GitHub Pages deployment path: `/vue-admin/`
+- Auto-import directories: `src/composables/**`, `src/utils/**`
+- Component auto-detection from `src/components` and `src/layout/components`
+
+## Current Dashboard Features
+The main dashboard (`src/views/dashboard/index.vue`) includes:
+- User profile with avatar and login information
+- Data table showing course purchase statistics
+- Summary cards with financial metrics and icons
+- Multiple ECharts visualizations:
+  - Line chart for order trends
+  - Bar chart for user activity
+  - Pie chart for video data distribution
+
+## Routing System
+- Static routes: Dashboard, login, register, redirect
+- Async routes: Documentation, Test, Guide, Role management, External links
+- Layout-based routing with nested children
+- Route metadata for icons, titles, and permissions
+
+## Code Style Guidelines
+- Use Composition API with `<script setup>`
+- Follow TypeScript best practices
+- Use SCSS for component-specific styles
+- Leverage auto-imported Vue APIs
+- Maintain consistent naming conventions
+- Use Element Plus components for UI elements
+
+## API Integration
+- Axios configured for HTTP requests
+- Global API proxy: `$api` available in components
+- Base URL handling for different environments
+- Mock data structure for dashboard charts
+
+## Testing and Quality
+- ESLint + Prettier for code quality
+- Husky git hooks for pre-commit checks
+- Lint-staged for optimized linting
+- Commitlint for conventional commits
+
+## Development Notes
+- The project uses Chinese language in some UI text and comments
+- Icons are from Ant Design icon set via Iconify
+- UnoCSS is configured with presets for atomic styling
+- State persistence is enabled for Pinia stores
+- Component registration is automatic via unplugin

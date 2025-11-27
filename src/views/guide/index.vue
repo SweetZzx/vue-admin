@@ -52,20 +52,20 @@
           </template>
         </el-table-column>
         <el-table-column prop="time" label="发布时间" />
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" class="w-100px">
           <template #default="scope">
-            <el-button
-              type="primary"
-              icon="Edit"
-              circle
-              @click="handleEdit(scope.row)"
-            ></el-button>
-            <el-button
-              type="danger"
-              icon="Delete"
-              circle
-              @click="del(scope.row.id)"
-            ></el-button>
+            <el-button class="p-0" type="text" @click="handleEdit(scope.row)">
+              <svg-icon
+                icon-name="ant-design:edit-outlined"
+                class="text-blue-500 size-5"
+              />
+            </el-button>
+            <el-button class="p-0" type="text" @click="del(scope.row.id)">
+              <svg-icon
+                icon-name="ant-design:delete-outlined"
+                class="text-red-500 size-5 m-l-10px"
+              />
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -163,7 +163,7 @@
 </template>
 <script setup>
 import { onBeforeUnmount, reactive, ref, shallowRef } from 'vue';
-import request from '@/utils/request.js';
+import request from '@/api/config/request';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css

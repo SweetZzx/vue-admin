@@ -1,4 +1,4 @@
-import request from '@/api/config/request';
+import request from '@/api/config/request2';
 import type { APIResponse } from './type'; // 假设你已经在 type 文件中定义了 APIResponse 接口
 
 // 用户信息接口定义

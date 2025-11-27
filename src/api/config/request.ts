@@ -1,48 +1,49 @@
 import axios from 'axios';
-import { useUserStore } from '@/stores/user';
-import { getToken, removeToken } from '@/utils/auth';
 import { ElMessage } from 'element-plus';
-import router from '@/router';
+import type { InternalAxiosRequestConfig } from 'axios';
 
-// // 🔥 根据环境设置 baseURL
-// const getBaseURL = () => {
-//   if (import.meta.env.DEV) {
-//     // 开发环境使用代理
-//     return 'http://47.109.145.118:8080';
-//   } else {
-//     // 🔥 生产环境直接调用服务器 API
-//     return import.meta.env.VITE_API_URL || 'http://47.109.145.118:8080';
-//   }
-// };
+/**
+ * 封装的 axios 请求工具
+ *
+ * 特性：
+ * 1. 自动携带 token
+ * 2. 统一的错误处理
+ * 3. 支持自定义成功/错误提示
+ * 4. 支持自定义成功/错误回调
+ *
+ * 配置选项：
+ * @param {boolean} showDefaultMsg - 是否显示默认的成功/错误提示，默认为 true
+ * @param {string} successMsg - 自定义成功提示消息
+ * @param {string} errorMsg - 自定义错误提示消息
+ * @param {Function} onSuccess - 成功回调函数，参数为响应数据
+ * @param {Function} onError - 错误回调函数，参数为错误信息
+ */
 
-const config = {
-  // baseURL: 'http://localhost:8080',
-  // baseURL: 'http://47.109.145.118:8080',
+// 创建 axios 实例
+const service = axios.create({
+  // baseURL: import.meta.env.VUE_APP_BASE_API || '/api', // API 的基础URL
   baseURL: 'https://sweetzzx.dpdns.org',
 
-  // baseURL: 'https://api.sweetzzx.dpdns.org',
-
-  timeout: 30000
-};
-
-const service = axios.create(config);
+  timeout: 15000, // 请求超时时间
+  headers: {
+    'Content-Type': 'application/json;charset=utf-8'
+  }
+});
 
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    // 设置内容类型
-    config.headers['Content-Type'] = 'application/json;charset=utf-8';
     const user = JSON.parse(localStorage.getItem('userInfo') || '{}');
     config.headers['token'] = user.token;
-
-    // // 开发环境打印请求信息（可选）
-    // if (import.meta.env.DEV) {
-    //   console.log('请求地址:', config.baseURL + config.url);
+    // const token = localStorage.getItem('token');
+    // if (token) {
+    //   // 直接使用 token，不加 Bearer 前缀
+    //   config.headers['token'] = token;
     // }
-    console.log(config);
     return config;
   },
   (error) => {
+    console.error('请求错误：', error);
     return Promise.reject(error);
   }
 );
@@ -51,85 +52,246 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     let res = response.data;
-
-    // 兼容服务端返回的字符串数据
+    console.log(res);
     if (typeof res === 'string') {
       res = res ? JSON.parse(res) : res;
     }
+    const config = response.config || {};
 
-    // 兼容不同的成功状态码格式
-    const code = String(res?.code ?? '200');
+    // 如果请求配置中指定了不需要默认的成功/错误提示，则跳过
+    const showDefaultMsg = config.showDefaultMsg !== false;
 
-    // 处理认证失败
-    if (code === '401') {
-      ElMessage.error(res.msg || res.message || 'token已过期，请重新登录');
-      // // 清除token并跳转登录页
-      // removeToken();
-      // const store = useUserStore();
-      // store.logout();
-      // router.push('/login');
-      return Promise.reject(res);
+    // 检查响应状态
+    if (res.code === '200') {
+      try {
+        // 自定义成功提示
+        if (config.successMsg) {
+          ElMessage.success(config.successMsg);
+        } else if (
+          showDefaultMsg &&
+          config.method &&
+          config.method.toLowerCase() !== 'get'
+        ) {
+          // 非 GET 请求默认显示操作成功
+          ElMessage.success('操作成功');
+        }
+
+        // 自定义成功回调
+        if (typeof config.onSuccess === 'function') {
+          config.onSuccess(res.data);
+        }
+
+        return res.data;
+      } catch (err) {
+        return res.data;
+      }
+    } else {
+      // 错误处理
+      try {
+        // 自定义错误提示
+        if (config.errorMsg) {
+          ElMessage.error(config.errorMsg);
+        } else if (showDefaultMsg) {
+          // 根据后端返回的错误码显示对应的错误信息
+          let errorMessage = res.msg || '请求失败';
+
+          switch (res.code) {
+            case '401':
+              errorMessage = '未登录或登录已过期，请重新登录';
+              break;
+            case '403':
+              errorMessage = '没有权限进行此操作';
+              break;
+            case '404':
+              errorMessage = '请求的资源不存在';
+              break;
+            case '500':
+              errorMessage = '服务器内部错误';
+              break;
+            default:
+              // 如果后端返回了具体错误信息，优先使用后端的错误信息
+              errorMessage = res.msg || `请求失败(${res.code})`;
+          }
+
+          ElMessage.error(errorMessage);
+        }
+
+        // 自定义错误回调
+        if (typeof config.onError === 'function') {
+          config.onError(res);
+        }
+
+        // 返回一个被拒绝的 Promise，但保留原始错误信息
+        return Promise.reject({
+          code: res.code,
+          message: res.msg || '请求失败',
+          data: res.data,
+          type: 'business' // 标记这是业务错误
+        });
+      } catch (err) {
+        console.error('Error handler error:', err);
+        return Promise.reject(err);
+      }
     }
-
-    // 处理业务失败
-    if (!['0', '200'].includes(code)) {
-      const errorMsg = res.msg || res.message || '请求失败';
-      ElMessage.error(errorMsg);
-      return Promise.reject(res);
-    }
-    return res;
   },
   (error) => {
-    // 增强错误处理
-    let errorMessage = '请求失败';
+    const config = error.config || {};
 
-    if (!error.response) {
-      errorMessage = '网络错误，请检查网络连接';
-    } else {
-      const status = error.response.status;
-      switch (status) {
-        case 401: {
-          errorMessage = 'token已过期，请重新登录';
-          // // 清除token并跳转登录页
-          // removeToken();
-          // const store = useUserStore();
-          // store.logout();
-          // router.push('/login');
-          break;
-        }
-        case 403:
-          errorMessage = '没有权限访问';
-          break;
-        case 404:
-          errorMessage = '未找到请求接口';
-          break;
-        case 500:
-          errorMessage = '系统异常，请联系管理员';
-          break;
-        case 502:
-          errorMessage = '网关错误';
-          break;
-        case 503:
-          errorMessage = '服务不可用';
-          break;
-        case 504:
-          errorMessage = '网关超时';
-          break;
-        default:
-          errorMessage =
-            error.response.data?.message || error.message || '请求失败';
+    // 错误处理
+    if (typeof config.onError === 'function') {
+      try {
+        config.onError(error);
+      } catch (err) {
+        console.error('Error callback error:', err);
       }
     }
 
-    ElMessage.error(errorMessage);
+    // 显示错误信息
+    if (config.showDefaultMsg !== false) {
+      let message = config.errorMsg || '网络请求失败，请稍后重试';
 
-    // 开发环境打印详细错误
-    if (import.meta.env.DEV) {
-      console.error('响应错误:', error);
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            message = '请求参数错误';
+            break;
+          case 401:
+            message = '未授权，请重新登录';
+            break;
+          case 403:
+            message = '拒绝访问';
+            break;
+          case 404:
+            message = '请求的资源不存在';
+            break;
+          case 408:
+            message = '请求超时';
+            break;
+          case 500:
+            message = '服务器内部错误';
+            break;
+          case 501:
+            message = '服务未实现';
+            break;
+          case 502:
+            message = '网关错误';
+            break;
+          case 503:
+            message = '服务不可用';
+            break;
+          case 504:
+            message = '网关超时';
+            break;
+          default:
+            message =
+              error.response.data?.msg || `请求失败(${error.response.status})`;
+        }
+      } else if (error.code === 'ECONNABORTED') {
+        message = '请求超时，请检查网络连接';
+      } else if (error.message?.includes('Network Error')) {
+        message = '网络连接失败，请检查网络设置';
+      }
+
+      // 使用 ElMessage 显示错误，并设置较长的显示时间
+      ElMessage({
+        message,
+        type: 'error',
+        duration: 5000,
+        showClose: true
+      });
     }
 
-    return Promise.reject(error);
+    // 返回一个被拒绝的 Promise，但包含更多信息
+    return Promise.reject({
+      code: error.response?.status,
+      message: error.message,
+      data: error.response?.data,
+      type: 'http', // 标记这是 HTTP 错误
+      originalError: error
+    });
   }
 );
 
-export default service;
+// 扩展请求方法
+const request = {
+  get(
+    url: string,
+    params?: any,
+    config: Partial<InternalAxiosRequestConfig> = {}
+  ) {
+    return service.get(url, { params, ...config });
+  },
+
+  post(
+    url: string,
+    data?: any,
+    config: Partial<InternalAxiosRequestConfig> = {}
+  ) {
+    return service.post(url, data, config);
+  },
+
+  put(
+    url: string,
+    data?: any,
+    config: Partial<InternalAxiosRequestConfig> = {}
+  ) {
+    return service.put(url, data, config);
+  },
+
+  delete(url: string, config: Partial<InternalAxiosRequestConfig> = {}) {
+    return service.delete(url, config);
+  }
+};
+
+/**
+ * 请求方法使用示例：
+ *
+ * 1. 基础请求：
+ * // GET 请求
+ * request.get('/api/users', { page: 1 })
+ *
+ * // POST 请求
+ * request.post('/api/users', { name: 'Tom', age: 20 })
+ *
+ * // PUT 请求
+ * request.put('/api/users/1', { name: 'Tom' })
+ *
+ * // DELETE 请求
+ * request.delete('/api/users/1')
+ *
+ * 2. 自定义提示消息：
+ * request.post('/api/users', data, {
+ *   successMsg: '添加用户成功！',
+ *   errorMsg: '添加用户失败，请重试'
+ * })
+ *
+ * 3. 关闭默认提示：
+ * request.post('/api/users', data, {
+ *   showDefaultMsg: false
+ * })
+ *
+ * 4. 使用回调函数：
+ * request.post('/api/users', data, {
+ *   onSuccess: (data) => {
+ *     console.log('请求成功：', data)
+ *   },
+ *   onError: (error) => {
+ *     console.log('请求失败：', error)
+ *   }
+ * })
+ *
+ * 5. 完整示例：
+ * request.post('/api/users', data, {
+ *   successMsg: '添加成功',
+ *   errorMsg: '添加失败',
+ *   showDefaultMsg: true,
+ *   onSuccess: (data) => {
+ *     // 处理成功逻辑
+ *   },
+ *   onError: (error) => {
+ *     // 处理错误逻辑
+ *   }
+ * })
+ */
+
+export default request;

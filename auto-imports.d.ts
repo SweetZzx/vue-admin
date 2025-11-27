@@ -60,7 +60,6 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const removeToken: typeof import('./src/utils/auth').removeToken
-  const request: typeof import('./src/utils/request.js').default
   const resolveComponent: typeof import('vue').resolveComponent
   const setActivePinia: typeof import('pinia').setActivePinia
   const setColors: typeof import('./src/utils/color').setColors

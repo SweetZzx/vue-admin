@@ -22,7 +22,7 @@
           <svg-icon icon-name="ant-design:home-outlined" class="mr-2" />
           首页
         </el-dropdown-item>
-        <el-dropdown-item command="profile">
+        <el-dropdown-item command="person">
           <svg-icon icon-name="ant-design:user-outlined" class="mr-2" />
           个人设置
         </el-dropdown-item>
@@ -39,9 +39,9 @@
 </template>
 
 <script lang="ts" setup>
-import defaultAvatar from '@/assets/vue.svg';
 import { useUserStore } from '@/stores/user';
 import { ElMessageBox } from 'element-plus';
+import defaultAvatar from '@/assets/imgs/default.jpg';
 
 const { logout, state } = useUserStore();
 const router = useRouter();
@@ -65,8 +65,8 @@ const handleCommand = async (command: string) => {
     case 'home':
       await router.push('/dashboard');
       break;
-    case 'profile':
-      await router.push('/profile/index');
+    case 'person':
+      await router.push('/role/person');
       break;
     case 'logout':
       handleLogout();

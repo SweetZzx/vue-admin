@@ -6,25 +6,21 @@ const includes = computed(() => store.cacheViews as string[]);
 
 <template>
   <router-view v-slot="{ Component }">
-    <!--组件持久化-->
-    <transition name="fade">
-      <keep-alive :include="includes">
-        <component :is="Component"></component>
-      </keep-alive>
-    </transition>
+    <keep-alive :include="includes">
+      <component :is="Component" />
+    </keep-alive>
   </router-view>
 </template>
 
 <style class="scss" scoped>
+/* 如果希望保留动画，可以设置更简单的过渡效果 */
 .fade-enter-active,
 .fade-leave-active {
-  @apply transition-all duration-500;
+  transition: opacity 0.3s ease; /* 更平滑的过渡 */
 }
 
-.fade-enter-from {
-  @apply opacity-0 translate-x-[50px];
-}
+.fade-enter-from,
 .fade-leave-to {
-  @apply opacity-0 translate-x-[-50px];
+  opacity: 0; /* 透明度 */
 }
 </style>

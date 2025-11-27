@@ -112,7 +112,7 @@
 import { useUserStore } from '@/stores/user';
 import type { FormInstance } from 'element-plus';
 
-const { login } = useUserStore(); // 🔥 使用你的 store
+const { login } = useUserStore();
 const router = useRouter();
 
 const loginState = reactive({

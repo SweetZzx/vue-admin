@@ -1,29 +1,29 @@
 <template>
   <div>
-    <div class="card" style="margin-bottom: 5px">
+    <div class="card m-b-5px">
       <el-input
         clearable
         @clear="load"
-        style="width: 260px; margin-right: 5px"
+        class="w-260px m-r-5px"
         v-model="data.username"
         placeholder="请输入账号查询"
-      ></el-input>
+      />
       <el-input
         clearable
         @clear="load"
-        style="width: 260px; margin-right: 5px"
+        class="w-260px m-r-5px"
         v-model="data.name"
         placeholder="请输入名称查询"
-      ></el-input>
+      />
       <el-button type="primary" @click="load">查 询</el-button>
       <el-button @click="reset">重 置</el-button>
     </div>
-    <div class="card" style="margin-bottom: 5px">
+    <div class="card m-b-5px">
       <el-button type="primary" @click="handleAdd">新 增</el-button>
       <el-button type="danger" @click="deleteBatch">批量删除</el-button>
       <el-button type="info" @click="exportData">批量导出</el-button>
       <el-upload
-        style="display: inline-block; margin-left: 10px"
+        class="inline-block m-l-10px"
         action="https://sweetzzx.dpdns.org/user/import"
         :show-file-list="false"
         :on-success="handleImportSuccess"
@@ -32,27 +32,21 @@
       </el-upload>
     </div>
 
-    <div class="card" style="margin-bottom: 5px">
+    <div class="card m-b-5px">
       <el-table
         :data="data.tableData"
-        style="width: 100%"
+        class="w-full"
         @selection-change="handleSelectionChange"
         :header-cell-style="{ color: '#333', backgroundColor: '#eaf4ff' }"
       >
-        <el-table-column type="selection" width="55" />
-        <el-table-column label="头像" width="100">
+        <el-table-column type="selection" class="w-55px" />
+        <el-table-column label="头像" class="w-40px">
           <template #default="scope">
             <el-image
-              v-if="scope.row.avatar"
-              :src="scope.row.avatar"
-              :preview-src-list="[scope.row.avatar]"
+              :src="scope.row.avatar || dfimg"
+              :preview-src-list="[scope.row.avatar || data.DEFAULT_AVATAR]"
               :preview-teleported="true"
-              style="
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                display: block;
-              "
+              class="w-40px h-40px rounded-full"
             />
           </template>
         </el-table-column>
@@ -60,24 +54,25 @@
         <el-table-column prop="name" label="名称" />
         <el-table-column prop="phone" label="电话" />
         <el-table-column prop="email" label="邮箱" />
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" class="w-100px">
           <template #default="scope">
-            <el-button
-              type="primary"
-              icon="Edit"
-              circle
-              @click="handleEdit(scope.row)"
-            ></el-button>
-            <el-button
-              type="danger"
-              icon="Delete"
-              circle
-              @click="del(scope.row.id)"
-            ></el-button>
+            <el-button class="p-0" type="text" @click="handleEdit(scope.row)">
+              <svg-icon
+                icon-name="ant-design:edit-outlined"
+                class="text-blue-500 size-5"
+              />
+            </el-button>
+            <el-button class="p-0" type="text" @click="del(scope.row.id)">
+              <svg-icon
+                icon-name="ant-design:delete-outlined"
+                class="text-red-500 size-5 m-l-10px"
+              />
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
+
     <div class="card">
       <el-pagination
         v-model:current-page="data.pageNum"
@@ -93,7 +88,7 @@
     <el-dialog
       title="普通用户信息"
       v-model="data.formVisible"
-      width="30%"
+      class="w-30%"
       destroy-on-close
     >
       <el-form
@@ -101,7 +96,7 @@
         :model="data.form"
         :rules="data.rules"
         label-width="80px"
-        style="padding: 20px 30px 10px 0"
+        class="p-5px px-2"
       >
         <el-form-item prop="username" label="账号">
           <el-input
@@ -154,12 +149,12 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
-
-import request from '@/utils/request.js';
+import request from '@/api/config/request';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import dfimg from '@/assets/imgs/default.jpg';
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('code_user') || '{}'),
+  user: JSON.parse(localStorage.getItem('userInfo') || '{}'),
   username: null,
   name: null,
   pageNum: 1,
@@ -168,6 +163,8 @@ const data = reactive({
   tableData: [],
   formVisible: false,
   form: {},
+  DEFAULT_AVATAR: '/assets/imgs/default.jpg',
+
   rules: {
     username: [{ required: true, message: '请填写账号', trigger: 'blur' }],
     name: [{ required: true, message: '请填写名称', trigger: 'blur' }],
@@ -180,141 +177,152 @@ const data = reactive({
 
 const formRef = ref();
 
-const load = () => {
-  request
-    .get('/user/selectPage', {
-      params: {
-        pageNum: data.pageNum,
-        pageSize: data.pageSize,
-        username: data.username,
-        name: data.name
-      }
-    })
-    .then((res) => {
-      if (res.code === '200') {
-        data.tableData = res.data.list;
-        data.total = res.data.total;
-      } else {
-        ElMessage.error(res.msg);
-      }
+// 加载用户数据
+const load = async () => {
+  try {
+    const res = await request.get('/user/selectPage', {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      username: data.username,
+      name: data.name
     });
+    data.tableData = res.list;
+    data.total = res.total;
+  } catch (error) {
+    console.error('加载数据失败:', error);
+  }
 };
-load();
 
+// 重置查询条件
 const reset = () => {
   data.username = null;
   data.name = null;
   load();
 };
 
+// 新增用户
 const handleAdd = () => {
   data.formVisible = true;
   data.form = {};
 };
 
-const add = () => {
-  // formRef 是表单的引用
-  formRef.value.validate((valid) => {
-    if (valid) {
-      // 验证通过的情况下
-      request.post('/user/add', data.form).then((res) => {
-        if (res.code === '200') {
+// 添加用户
+const add = async () => {
+  const valid = await formRef.value.validate();
+  if (valid) {
+    try {
+      await request.post('/user/add', data.form, {
+        successMsg: '新增成功',
+        errorMsg: '请确保所有必填字段已填写',
+        showDefaultMsg: true,
+        onSuccess: () => {
           data.formVisible = false;
-          ElMessage.success('新增成功');
           load();
-        } else {
-          ElMessage.error(res.msg);
         }
       });
+    } catch (error) {
+      console.error('新增失败:', error);
     }
-  });
-};
-
-const handleEdit = (row) => {
-  data.form = JSON.parse(JSON.stringify(row)); // 深度拷贝数据
-  data.formVisible = true;
-};
-
-const update = () => {
-  // formRef 是表单的引用
-  formRef.value.validate((valid) => {
-    if (valid) {
-      // 验证通过的情况下
-      request.put('/user/update', data.form).then((res) => {
-        if (res.code === '200') {
-          data.formVisible = false;
-          ElMessage.success('修改成功');
-          load();
-        } else {
-          ElMessage.error(res.msg);
-        }
-      });
-    }
-  });
-};
-
-const save = () => {
-  if (data.form.id) {
-    update();
-  } else {
-    add();
   }
 };
 
-const del = (id) => {
-  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
-    type: 'warning'
-  })
-    .then((res) => {
-      request.delete(`/user/delete/${id}`).then((res) => {
-        if (res.code === '200') {
-          ElMessage.success('删除成功');
+// 编辑用户
+const handleEdit = (row) => {
+  data.form = JSON.parse(JSON.stringify(row));
+  data.formVisible = true;
+};
+
+// 更新用户
+const update = async () => {
+  const valid = await formRef.value.validate();
+  if (valid) {
+    try {
+      await request.put('/user/update', data.form, {
+        successMsg: '修改成功',
+        errorMsg: '请确保所有必填字段已填写',
+        showDefaultMsg: true,
+        onSuccess: () => {
+          data.formVisible = false;
           load();
-        } else {
-          ElMessage.error(res.msg);
         }
       });
-    })
-    .catch((err) => {});
+    } catch (error) {
+      console.error('修改失败:', error);
+    }
+  }
 };
 
+// 保存用户
+const save = () => {
+  if (data.form.id) {
+    update(); // 调用更新方法
+  } else {
+    add(); // 调用添加方法
+  }
+};
+
+// 删除用户
+const del = async (id) => {
+  try {
+    await ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
+      type: 'warning'
+    });
+    await request.delete(`/user/delete/${id}`, {
+      successMsg: '删除成功',
+      onSuccess: () => {
+        load();
+      }
+    });
+  } catch (error) {
+    console.error('删除失败:', error);
+  }
+};
+
+// 选择变化处理
 const handleSelectionChange = (rows) => {
-  // rows 就是实际选择的数组
   data.rows = rows;
-  data.ids = data.rows.map((v) => v.id); // map可以把对象的数组 转换成一个纯数字的数组  [1,2,3]
+  data.ids = data.rows.map((v) => v.id);
 };
 
-const deleteBatch = () => {
+// 批量删除
+const deleteBatch = async () => {
   if (data.rows.length === 0) {
     ElMessage.warning('请选择数据');
     return;
   }
-  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
-    type: 'warning'
-  })
-    .then((res) => {
-      request.delete('/user/deleteBatch', { data: data.rows }).then((res) => {
-        if (res.code === '200') {
-          ElMessage.success('批量删除成功');
+  try {
+    await ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
+      type: 'warning'
+    });
+    await request.delete(
+      '/user/deleteBatch',
+      { data: data.rows },
+      {
+        successMsg: '批量删除成功',
+        errorMsg: '批量删除失败',
+        showDefaultMsg: true,
+        onSuccess: () => {
           load();
-        } else {
-          ElMessage.error(res.msg);
         }
-      });
-    })
-    .catch((err) => {});
+      }
+    );
+  } catch (error) {
+    console.error('批量删除失败:', error);
+  }
 };
 
+// 导出数据
 const exportData = () => {
-  const idsStr = data.ids.join(','); // 把数组转换成  字符串  [1,2,3]  ->  "1,2,3"
+  const idsStr = data.ids.join(',');
   const url =
-    `https://sweetzzx.dpdns.org/user/export?username=${data.username === null ? '' : data.username}` +
-    `&name=${data.name === null ? '' : data.name}` +
+    `https://sweetzzx.dpdns.org/user/export?username=${data.username || ''}` +
+    `&name=${data.name || ''}` +
     `&ids=${idsStr}` +
     `&token=${data.user.token}`;
   window.open(url);
 };
 
+// 导入数据成功处理
 const handleImportSuccess = (res) => {
   if (res.code === '200') {
     ElMessage.success('批量导入数据成功');
@@ -324,7 +332,11 @@ const handleImportSuccess = (res) => {
   }
 };
 
+// 上传头像成功处理
 const handleFileSuccess = (res) => {
   data.form.avatar = res.data;
 };
+onMounted(() => {
+  load();
+});
 </script>

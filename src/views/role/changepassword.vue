@@ -48,11 +48,14 @@
 </template>
 <script setup>
 import { reactive, ref } from 'vue';
-import request from '@/utils/request.js';
+import request from '@/api/config/request';
 import { ElMessage } from 'element-plus';
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('code_user') || '{}'),
+  user: JSON.parse(localStorage.getItem('userInfo') || '{}'),
+  password: '',
+  newPassword: '',
+  new2Password: '',
   rules: {
     password: [{ required: true, message: '请填写原密码', trigger: 'blur' }],
     newPassword: [{ required: true, message: '请填写新密码', trigger: 'blur' }],
@@ -62,21 +65,31 @@ const data = reactive({
 
 const formRef = ref();
 
-const updatePassword = () => {
-  formRef.value.validate((valid) => {
-    if (valid) {
-      request.post('/updatePassword', data.user).then((res) => {
-        if (res.code === '200') {
-          ElMessage.success('修改成功');
-          setInterval(() => {
-            localStorage.removeItem('code_user');
-            location.href = '/login';
-          }, 500);
-        } else {
-          ElMessage.error(res.msg);
+const updatePassword = async () => {
+  const valid = await formRef.value.validate();
+  if (valid) {
+    try {
+      await request.post(
+        '/updatePassword',
+        {
+          oldPassword: data.password,
+          newPassword: data.newPassword
+        },
+        {
+          onSuccess: () => {
+            ElMessage.success('密码修改成功，您将被重新登录');
+            setTimeout(() => {
+              localStorage.removeItem('userInfo');
+              location.href = '/login';
+            }, 500);
+          },
+          errorMsg: '修改密码失败，请重试',
+          showDefaultMsg: true
         }
-      });
+      );
+    } catch (error) {
+      console.error('密码修改请求失败:', error);
     }
-  });
+  }
 };
 </script>

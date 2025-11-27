@@ -55,33 +55,43 @@
 </template>
 <script setup>
 import { reactive } from 'vue';
-import request from '@/utils/request.js';
+import request from '@/api/config/request';
 import { ElMessage } from 'element-plus';
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('code_user') || '{}')
+  user: JSON.parse(localStorage.getItem('userInfo') || '{}')
 });
 
 const handleFileSuccess = (res) => {
-  data.user.avatar = res.data;
+  data.user.avatar = res;
 };
 
 const emit = defineEmits(['updateUser']);
 
-const update = () => {
+const update = async () => {
   let url;
   if (data.user.role === 'ADMIN') {
     url = '/admin/update';
-  }
-  if (data.user.role === 'USER') {
+  } else if (data.user.role === 'USER') {
     url = '/user/update';
   }
-  request.put(url, data.user).then((res) => {
-    if (res.code === '200') {
-      ElMessage.success('更新成功');
-      localStorage.setItem('code_user', JSON.stringify(data.user));
-      emit('updateUser');
+
+  try {
+    const res = await request.put(url, data.user, {
+      successMsg: '更新成功',
+      errorMsg: '更新失败，请检查输入',
+      showDefaultMsg: true,
+      onSuccess: () => {
+        localStorage.setItem('userInfo', JSON.stringify(data.user));
+        emit('updateUser');
+      }
+    });
+
+    if (res.code !== '200') {
+      ElMessage.error(res.msg);
     }
-  });
+  } catch (error) {
+    console.error('更新失败:', error);
+  }
 };
 </script>
