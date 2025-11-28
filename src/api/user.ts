@@ -1,5 +1,4 @@
 import request from '@/api/config/request';
-import type { ApiReponse } from './type';
 
 export interface IUserLoginData {
   username: string;
@@ -36,15 +35,13 @@ export interface IRegisterResponseData {
 }
 
 // 登录接口
-export const login = (
-  data: IUserLoginData
-): Promise<ApiReponse<ILoginResponseData>> => {
-  return request.post('/login', data);
+export const login = (data: IUserLoginData): Promise<ILoginResponseData> => {
+  return request.post<ILoginResponseData>('/login', data);
 };
 
 // 注册接口
 export const register = (
   data: IUserRegisterData
-): Promise<ApiReponse<IRegisterResponseData>> => {
-  return request.post('/register', data);
+): Promise<IRegisterResponseData> => {
+  return request.post<IRegisterResponseData>('/register', data);
 };

@@ -214,32 +214,35 @@ service.interceptors.response.use(
 
 // 扩展请求方法
 const request = {
-  get(
+  get<T = any>(
     url: string,
     params?: any,
     config: Partial<InternalAxiosRequestConfig> = {}
   ) {
-    return service.get(url, { params, ...config });
+    return service.get<any, T>(url, { params, ...config });
   },
 
-  post(
+  post<T = any>(
     url: string,
     data?: any,
     config: Partial<InternalAxiosRequestConfig> = {}
   ) {
-    return service.post(url, data, config);
+    return service.post<any, T>(url, data, config);
   },
 
-  put(
+  put<T = any>(
     url: string,
     data?: any,
     config: Partial<InternalAxiosRequestConfig> = {}
   ) {
-    return service.put(url, data, config);
+    return service.put<any, T>(url, data, config);
   },
 
-  delete(url: string, config: Partial<InternalAxiosRequestConfig> = {}) {
-    return service.delete(url, config);
+  delete<T = any>(
+    url: string,
+    config: Partial<InternalAxiosRequestConfig> = {}
+  ) {
+    return service.delete<any, T>(url, config);
   }
 };
 

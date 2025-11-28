@@ -13,8 +13,7 @@ export const useUserStore = defineStore('user', () => {
   const login = async (userInfo: IUserLoginData) => {
     try {
       console.log('store 收到:', userInfo);
-      const response = await loginApi(userInfo);
-      const { data } = response;
+      const data = await loginApi(userInfo);
 
       // 保存 token
       state.token = data.token;
@@ -34,8 +33,7 @@ export const useUserStore = defineStore('user', () => {
   const register = async (userInfo: IUserRegisterData) => {
     try {
       console.log('store 注册收到:', userInfo);
-      const response = await registerApi(userInfo);
-      const { data } = response;
+      const data = await registerApi(userInfo);
 
       ElMessage.success('注册成功');
       return Promise.resolve(data);
