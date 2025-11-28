@@ -16,6 +16,7 @@ declare module 'vue' {
     Avatar: typeof import('./src/layout/components/Avatar/index.vue')['default']
     Breadcrumb: typeof import('./src/layout/components/Breadcrumb/index.vue')['default']
     Dialog: typeof import('./src/components/Dialog/index.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']

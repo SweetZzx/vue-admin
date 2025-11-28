@@ -147,7 +147,9 @@ const asyncRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/role/changepassword.vue'),
         meta: {
           icon: 'ant-design:lock-outlined',
-          title: 'Change Password'
+          title: 'Change Password',
+          hidden: true,
+          openSecurity: true
         }
       }
     ]
