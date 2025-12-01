@@ -240,9 +240,10 @@ const request = {
 
   delete<T = any>(
     url: string,
+    data?: any,
     config: Partial<InternalAxiosRequestConfig> = {}
   ) {
-    return service.delete<any, T>(url, config);
+    return service.delete<any, T>(url, { data, ...config });
   }
 };
 

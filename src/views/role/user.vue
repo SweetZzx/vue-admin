@@ -358,7 +358,7 @@ const del = async (id) => {
     await ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
       type: 'warning'
     });
-    await request.delete(`/user/delete/${id}`, {
+    await request.delete(`/user/delete/${id}`, null, {
       successMsg: '删除成功',
       onSuccess: () => {
         load();

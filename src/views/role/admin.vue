@@ -369,18 +369,14 @@ const deleteBatch = async () => {
       type: 'warning'
     });
 
-    await request.delete(
-      '/admin/deleteBatch',
-      { data: data.rows },
-      {
-        successMsg: '批量删除成功',
-        errorMsg: '批量删除失败',
-        showDefaultMsg: true,
-        onSuccess: () => {
-          load();
-        }
+    await request.delete('/admin/deleteBatch', data.rows, {
+      successMsg: '批量删除成功',
+      errorMsg: '批量删除失败',
+      showDefaultMsg: true,
+      onSuccess: () => {
+        load();
       }
-    );
+    });
   } catch (error) {
     console.error('批量删除失败:', error);
   }
@@ -392,7 +388,7 @@ const del = async (id) => {
       type: 'warning'
     });
 
-    await request.delete(`/admin/delete/${id}`, {
+    await request.delete(`/admin/delete/${id}`, null, {
       successMsg: '删除成功',
       onSuccess: () => {
         load();
