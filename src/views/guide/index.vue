@@ -162,14 +162,14 @@
   </div>
 </template>
 <script setup>
-import { onBeforeUnmount, reactive, ref, shallowRef } from 'vue';
+import { onBeforeUnmount, reactive, shallowRef } from 'vue';
 import request from '@/api/config/request';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import '@wangeditor/editor/dist/css/style.css'; // 引入 css
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('code_user') || '{}'),
+  user: JSON.parse(localStorage.getItem('userInfo') || '{}'),
   pageNum: 1,
   pageSize: 5,
   total: 0,
@@ -206,25 +206,19 @@ const handleCreated = (editor) => {
 };
 /* wangEditor5 初始化结束 */
 
-const load = () => {
-  request
-    .get('/introduction/selectPage', {
-      params: {
-        pageNum: data.pageNum,
-        pageSize: data.pageSize,
-        title: data.title
-      }
-    })
-    .then((res) => {
-      if (res.code === '200') {
-        data.tableData = res.data?.list;
-        data.total = res.data?.total;
-      } else {
-        ElMessage.error(res.msg);
-      }
+const load = async () => {
+  try {
+    const res = await request.get('/introduction/selectPage', {
+      pageNum: data.pageNum,
+      pageSize: data.pageSize,
+      title: data.title
     });
+    data.tableData = res?.list || [];
+    data.total = res?.total || 0;
+  } catch (error) {
+    console.error('加载攻略数据失败:', error);
+  }
 };
-load();
 
 const viewContent = (content) => {
   data.content = content;
@@ -245,45 +239,57 @@ const handleFileSuccess = (res) => {
   data.form.img = res.data;
 };
 
-const add = () => {
-  request.post('/introduction/add', data.form).then((res) => {
-    if (res.code === '200') {
-      ElMessage.success('新增成功');
-      data.formVisible = false;
-      load();
-    } else {
-      ElMessage.error(res.msg);
-    }
-  });
+const add = async () => {
+  try {
+    await request.post('/introduction/add', data.form, {
+      successMsg: '新增成功',
+      errorMsg: '新增失败，请检查输入',
+      showDefaultMsg: true,
+      onSuccess: () => {
+        data.formVisible = false;
+        load();
+      }
+    });
+  } catch (error) {
+    console.error('新增攻略失败:', error);
+  }
 };
 
-const update = () => {
-  request.put('/introduction/update', data.form).then((res) => {
-    if (res.code === '200') {
-      ElMessage.success('更新成功');
-      data.formVisible = false;
-      load();
-    } else {
-      ElMessage.error(res.msg);
-    }
-  });
+const update = async () => {
+  try {
+    await request.put('/introduction/update', data.form, {
+      successMsg: '更新成功',
+      errorMsg: '更新失败，请检查输入',
+      showDefaultMsg: true,
+      onSuccess: () => {
+        data.formVisible = false;
+        load();
+      }
+    });
+  } catch (error) {
+    console.error('更新攻略失败:', error);
+  }
 };
 
-const del = (id) => {
-  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
-    type: 'warning'
-  })
-    .then((res) => {
-      request.delete(`/introduction/delete/${id}`).then((res) => {
-        if (res.code === '200') {
-          ElMessage.success('删除成功');
-          load();
-        } else {
-          ElMessage.error(res.msg);
-        }
-      });
-    })
-    .catch((err) => {});
+const del = async (id) => {
+  try {
+    await ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', {
+      type: 'warning'
+    });
+
+    await request.delete(`/introduction/delete/${id}`, null, {
+      successMsg: '删除成功',
+      errorMsg: '删除失败，请稍后重试',
+      showDefaultMsg: true,
+      onSuccess: () => {
+        load();
+      }
+    });
+  } catch (error) {
+    if (error !== 'cancel') {
+      console.error('删除攻略失败:', error);
+    }
+  }
 };
 
 const save = () => {
@@ -298,14 +304,15 @@ const reset = () => {
   load();
 };
 
-const loadCategory = () => {
-  request.get('/category/selectAll').then((res) => {
-    if (res.code === '200') {
-      data.categoryData = res.data;
-    } else {
-      ElMessage.error(res.msg);
-    }
-  });
+const loadCategory = async () => {
+  try {
+    const res = await request.get('/category/selectAll');
+    data.categoryData = res || [];
+  } catch (error) {
+    console.error('加载分类数据失败:', error);
+  }
 };
+
+load();
 loadCategory();
 </script>
